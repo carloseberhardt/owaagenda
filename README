@@ -2,5 +2,3 @@ owaagenda
 
 This is Python script to screen scrape a daily agenda from Outlook Web Access.
 
-*warning*
-The main method takes password as input. If you run this from the command line your password will be in the history. Clear it.

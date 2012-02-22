@@ -3,7 +3,7 @@ Screen scrape a single day view of OWA calendar
 	example call
 	python agenda.py "https://mail.example.com/owa/?ae=Folder&t=IPF.Appointment" username password
 """
-import sys,urllib2,urlparse,json
+import sys, urllib2, urlparse, json, getpass
 from bs4 import BeautifulSoup
 
 
@@ -44,7 +44,7 @@ if __name__ == '__main__':
 	# better argument handling please
 	url = sys.argv[1] 
 	user = sys.argv[2] 
-	pwd = sys.argv[3]  
+	pwd = getpass.getpass("Password: ")
 	html = getHtml(url,user,pwd) 
 	agenda = scrapeAgenda(html)
 	print textFormatter(agenda)

@@ -1,9 +1,10 @@
 """
 Screen scrape a single day view of OWA calendar
 	example call
-	python agenda.py "https://mail.example.com/owa/?ae=Folder&t=IPF.Appointment" username password
+	python agenda.py "https://mail.example.com/owa/?ae=Folder&t=IPF.Appointment" username
 """
 import sys, urllib2, urlparse, json, getpass
+from urllib2 import URLError
 from bs4 import BeautifulSoup
 
 
@@ -15,10 +16,19 @@ def getHtml(url, user, pwd):
 	pwdmgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
 	pwdmgr.add_password(None, getBaseUrl(url), user, pwd)
 	handler = urllib2.HTTPBasicAuthHandler(pwdmgr)
-	opener = urllib2.build_opener(handler)
-	request = urllib2.Request(url)
-	calendar = opener.open(request)
-	html = calendar.read()
+	html = None
+	try:
+		opener = urllib2.build_opener(handler)
+		request = urllib2.Request(url)
+		calendar = opener.open(request)
+		html = calendar.read()
+	except URLError, e:
+		if hasattr(e, 'reason'):
+			print 'We failed to reach a server.'
+			print 'Reason: ', e.reason
+		elif hasattr(e, 'code'):
+			print 'The server couldn\'t fulfill the request.'
+			print 'Error code: ', e.code
 	return html
 
 def txt_class_with_link(tag):
@@ -45,6 +55,8 @@ if __name__ == '__main__':
 	url = sys.argv[1] 
 	user = sys.argv[2] 
 	pwd = getpass.getpass("Password: ")
-	html = getHtml(url,user,pwd) 
+	html = getHtml(url,user,pwd)
+	if html == None:
+		sys.exit(1)
 	agenda = scrapeAgenda(html)
 	print textFormatter(agenda)

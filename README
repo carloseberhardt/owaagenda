@@ -2,3 +2,4 @@ owaagenda
 
 This is Python script to screen scrape a daily agenda from Outlook Web Access.
 
+Eventually a web app built on tornado (http://www.tornadoweb.org/)... maybe?

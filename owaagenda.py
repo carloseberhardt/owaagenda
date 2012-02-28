@@ -40,11 +40,17 @@ def scrapeAgenda(html):
 	for td in bs.find_all("td", {"class": "txt"}):
 		for a in td.find_all("a"):
 			#TODO - fix this with better parsing (time, description, location)
-			agenda.append(a["title"].split(","))
+			tm, desc = a["title"].split(",")
+			if desc.find(";") > 0:
+				desc, loc = desc.split(";")
+			else:
+				loc = ""
+			d = dict(time=tm.strip(), description=desc.strip(),location=loc.strip())
+			agenda.append(d)
 	return agenda
 
 def textFormatter(thelist):
-	thelist = [",".join(x) for x in thelist]
+	thelist = ["%s: %s - %s" % (x['time'],x['description'],x['location']) for x in thelist]
 	return "\n".join(thelist)
 
 def jsonFormatter(thelist):

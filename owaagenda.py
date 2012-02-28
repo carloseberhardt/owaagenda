@@ -41,8 +41,9 @@ def scrapeAgenda(html):
 		for a in td.find_all("a"):
 			#TODO - fix this with better parsing (time, description, location)
 			tm, desc = a["title"].split(",")
-			if desc.find(";") > 0:
-				desc, loc = desc.split(";")
+			s = desc.find(";")
+			if s > 0:
+				desc, loc = desc[:s], desc[s+1:]
 			else:
 				loc = ""
 			d = dict(time=tm.strip(), description=desc.strip(),location=loc.strip())

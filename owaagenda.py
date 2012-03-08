@@ -40,7 +40,8 @@ def scrapeAgenda(html):
 	for td in bs.find_all("td", {"class": "txt"}):
 		for a in td.find_all("a"):
 			#TODO - fix this with better parsing (time, description, location)
-			tm, desc = a["title"].split(",")
+			tm, desc = a["title"].split(",")[0], a["title"].split(',')[1:]
+			desc = ','.join(desc)
 			s = desc.find(";")
 			if s > 0:
 				desc, loc = desc[:s], desc[s+1:]
